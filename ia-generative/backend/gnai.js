@@ -1,21 +1,14 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// backend/gnai.js
 require('dotenv').config();
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Access your API key as an environment variable (see "Set up your API key" above)
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const model = genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
 
-// Inicializa o modelo
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-async function perguntar(prompt) {
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
-  } catch (error) {
-    console.error("Erro ao gerar resposta:", error);
-    return "Houve um erro ao processar sua pergunta.";
-  }
+const perguntar = async (prompt) => {
+  const result = await model.generateContent(prompt);
+  console.log(result.response.text());
+  return result.response.text();
 }
 
-module.exports = perguntar;
+module.exports = { perguntar };
